@@ -27,7 +27,7 @@ export default function Markets() {
 
   // Fetch coins market data
   const { data: coinsData, isLoading: coinsLoading } = useQuery<CoinMarket[]>({
-    queryKey: ["/api/coins/markets", { page: currentPage, per_page: perPage }],
+    queryKey: [`/api/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${currentPage}&sparkline=false`],
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
