@@ -15,9 +15,6 @@ interface CryptocurrencyTableProps {
 
 export function CryptocurrencyTable({ coins, isLoading, onCoinClick }: CryptocurrencyTableProps) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
-  
-  // Debug log to see what data we have
-  console.log("CryptocurrencyTable - coins:", coins, "isLoading:", isLoading);
 
   if (isLoading) {
     return (

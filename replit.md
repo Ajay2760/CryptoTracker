@@ -2,7 +2,14 @@
 
 ## Overview
 
-This is a modern cryptocurrency dashboard application built with React and TypeScript. The application provides real-time cryptocurrency market data through the CoinGecko API, allowing users to browse markets, view detailed coin information with charts, and maintain a personal watchlist. The system follows a client-server architecture with a proxy backend to handle API requests and avoid CORS issues.
+This is a modern cryptocurrency dashboard application built with React and TypeScript. The application provides real-time cryptocurrency market data through the CoinGecko API, allowing users to browse markets, view detailed coin information with charts, and maintain a personal watchlist. The system is deployed on both Replit and Vercel with serverless functions for API proxying.
+
+## Recent Changes (July 31, 2025)
+
+✓ **Vercel Deployment Fixed**: Successfully resolved serverless function crashes by creating individual API endpoints  
+✓ **Data Loading Issues Resolved**: Fixed query configuration and URL construction for proper data fetching  
+✓ **API Structure Optimized**: Converted from single Express server to individual serverless functions  
+✓ **Live Data Confirmed**: Dashboard now displays real-time cryptocurrency data from CoinGecko API
 
 ## User Preferences
 
