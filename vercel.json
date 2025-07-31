@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    },
-    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -15,12 +11,24 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
+      "src": "/api/global",
+      "dest": "/api/global.ts"
+    },
+    {
+      "src": "/api/coins/markets",
+      "dest": "/api/coins/markets.ts"
+    },
+    {
+      "src": "/api/coins/([^/]+)/market_chart",
+      "dest": "/api/coins/[id]/market_chart.ts?id=$1"
+    },
+    {
+      "src": "/api/coins/([^/]+)",
+      "dest": "/api/coins/[id].ts?id=$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/api/index.ts"
+      "dest": "/dist/public/index.html"
     }
   ]
 }
