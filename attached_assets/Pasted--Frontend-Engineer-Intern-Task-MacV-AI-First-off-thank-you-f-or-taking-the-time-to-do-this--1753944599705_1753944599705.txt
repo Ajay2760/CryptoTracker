@@ -1,0 +1,71 @@
+# Frontend Engineer Intern Task - MacV AI
+
+First off, thank you *f*or taking the time to do this! 🙏 We know assignments can feel like homework, but we promise we’re not here to torture you. We just want to see how you think, how you structure code, and how you’d approach building something real.
+
+We’re a small team and we move fast, so we designed this as if we’re building an actual product feature together. Except you’re in full control. ****Make it your own, have fun with it, and show off your skills!
+
+## Goal:
+
+We want you to build a simple but sleek dashboard that pulls live data from the CoinGecko API and makes it easy for users to:
+
+- Browse top cryptocurrencies
+- Search & filter to find specific cryptocurrencies
+- See charts & details for each coin
+- Build a little watchlist of favorites
+
+The final result should be a simple, usable dashboard. And we’d love to see it deployed on Vercel so we can click around (don’t worry if its your first time, NextJS is very easy to deploy on Vercel)
+
+## What you’ll build
+
+1. Markets List (homepage)
+    - A paginated list or table of coins (50 coins per page).
+    - Columns: # (rank), coin (icon+name+symbol), price, 24h %, market cap, 24h volume.
+    - Search input (client-side filtering) matching name/symbol
+    - Filters (examples: market cap rank, 24h change %, volume)
+    - Loading / empty / error states
+    - Only USD currency is enough
+2. Coin Details 
+    - Clicking a coin opens a detail view /coin/[id].
+    - Info like price, market cap, volume, rank, and supply.
+    - Chart of the price with selectable ranges (24h / 7d / 30d / 90d).
+    - You can get creative with this page
+3. Watchlist
+    - Users can ⭐ to save/remove coins from a local watchlist
+    - The watchlist should persist in *localStorage* and have its own page.
+    - Watchlist page shows the same table with current prices as main page
+4. Bonus
+    - Loading skeletons & nice empty/error states.
+    - Debounce search so we’re not spamming the API.
+    - Responsive design
+    - Reusable components
+
+## Tech Details
+
+- NextJS
+- Typescript (optional)
+- Use useState where appropriate for filters, watchlist, etc.
+- Break things up into reusable components.
+- Styling is your choice (we use Tailwind and [https://ui.shadcn.com](https://ui.shadcn.com/))
+- Use any charting library (we like [https://ui.shadcn.com](https://ui.shadcn.com/))
+- Fetch data using axios or fetch from CoinGecko API (create an account, and there is an option for getting a free API key)
+- Deploy on Vercel
+
+## API Endpoints
+
+Refer here for CoinGecko API Docs: https://docs.coingecko.com/v3.0.1/reference/introduction
+
+You’ll first need to create an account and go to the developer dashboard (https://www.coingecko.com/en/developers/dashboard). There, you’ll find an option to create a Free Demo Account, and then you can create an API Key. 
+
+You’ll mainly need to use these endpoints:
+
+- /coins/markets – list of coins with metrics
+- /coins/list - list of coins
+- /coins/[id] – coin details
+- /coins/[id]/market_chart – time‑series price data
+
+## What We Care About
+
+- Can you fetch + manage data cleanly?
+- Do you know how to use state for filters, watchlists, etc.?
+- Do you think about UX (loading, errors, mobile, etc.)?
+- Are your components structured nicely and easy to read?
