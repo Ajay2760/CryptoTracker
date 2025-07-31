@@ -22,11 +22,5 @@
       "src": "/(.*)",
       "dest": "/api/index.ts"
     }
-  ],
-  "buildCommand": "npm run build",
-  "functions": {
-    "api/index.ts": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
