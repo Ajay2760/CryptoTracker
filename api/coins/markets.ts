@@ -16,12 +16,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { vs_currency = "usd", order = "market_cap_desc", per_page = 50, page = 1, sparkline = false } = req.query;
     
+    console.log('Markets API called with params:', { vs_currency, order, per_page, page, sparkline });
+    console.log('API Key present:', !!COINGECKO_API_KEY);
+    
     const apiUrl = new URL(`${BASE_URL}/coins/markets`);
     apiUrl.searchParams.set("vs_currency", vs_currency as string);
     apiUrl.searchParams.set("order", order as string);
     apiUrl.searchParams.set("per_page", per_page as string);
     apiUrl.searchParams.set("page", page as string);
     apiUrl.searchParams.set("sparkline", sparkline as string);
+    
+    console.log('Requesting URL:', apiUrl.toString());
     
     const headers: Record<string, string> = { 'Accept': 'application/json' };
     
@@ -31,11 +36,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const response = await fetch(apiUrl.toString(), { headers });
     
+    console.log('CoinGecko response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`CoinGecko API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('CoinGecko API error:', response.status, errorText);
+      throw new Error(`CoinGecko API error: ${response.status} - ${errorText}`);
     }
     
     const data = await response.json();
+    console.log('Data received, length:', Array.isArray(data) ? data.length : 'not array');
     return res.json(data);
     
   } catch (error) {

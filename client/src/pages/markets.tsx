@@ -20,16 +20,26 @@ export default function Markets() {
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // Fetch global market data
-  const { data: globalData, isLoading: globalLoading } = useQuery<GlobalData>({
+  const { data: globalData, isLoading: globalLoading, error: globalError } = useQuery<GlobalData>({
     queryKey: ["/api/global"],
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  // Debug log for troubleshooting
+  if (globalError) {
+    console.error('Global API Error:', globalError);
+  }
+
   // Fetch coins market data
-  const { data: coinsData, isLoading: coinsLoading } = useQuery<CoinMarket[]>({
+  const { data: coinsData, isLoading: coinsLoading, error: coinsError } = useQuery<CoinMarket[]>({
     queryKey: [`/api/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${currentPage}&sparkline=false`],
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
+
+  // Debug log for troubleshooting
+  if (coinsError) {
+    console.error('Coins API Error:', coinsError);
+  }
 
   // Filter coins based on search and filters
   const filteredCoins = useMemo(() => {
