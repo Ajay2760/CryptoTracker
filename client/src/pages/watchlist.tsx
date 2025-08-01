@@ -14,22 +14,31 @@ export default function Watchlist() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const { watchlist } = useWatchlist();
-  
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  // Fetch all coins to get watchlist data
-  const { data: allCoinsData, isLoading } = useQuery<CoinMarket[]>({
-    queryKey: ["/api/coins/markets", { per_page: 250 }], // Get more coins to cover watchlist
-    staleTime: 2 * 60 * 1000, // 2 minutes
+  // ✅ Fetch all coins (limit 250 for performance)
+  const {
+    data: allCoinsData,
+    isLoading,
+    error,
+  } = useQuery<CoinMarket[]>({
+    queryKey: ["watchlistCoins"],
+    queryFn: async () => {
+      const res = await fetch(
+        "/api/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250"
+      );
+      if (!res.ok) throw new Error("Failed to fetch watchlist coins");
+      return res.json();
+    },
+    staleTime: 2 * 60 * 1000,
   });
 
-  // Filter coins to show only watchlist items
+  // ✅ Filter coins by watchlist and search query
   const watchlistCoins = useMemo(() => {
     if (!allCoinsData || watchlist.length === 0) return [];
 
     let filtered = allCoinsData.filter((coin) => watchlist.includes(coin.id));
 
-    // Apply search filter
     if (debouncedSearchQuery) {
       const query = debouncedSearchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -42,9 +51,7 @@ export default function Watchlist() {
     return filtered;
   }, [allCoinsData, watchlist, debouncedSearchQuery]);
 
-  const handleCoinClick = (coinId: string) => {
-    setLocation(`/coin/${coinId}`);
-  };
+  const handleCoinClick = (coinId: string) => setLocation(`/coin/${coinId}`);
 
   const EmptyState = () => (
     <Card className="p-12">
@@ -66,19 +73,47 @@ export default function Watchlist() {
     </Card>
   );
 
+  const SearchEmptyState = () => (
+    <Card className="p-12">
+      <CardContent className="p-0 text-center">
+        <h3 className="text-lg font-medium text-slate-900 mb-2">
+          No results found
+        </h3>
+        <p className="text-slate-600">
+          No cryptocurrencies in your watchlist match "{debouncedSearchQuery}".
+        </p>
+      </CardContent>
+    </Card>
+  );
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-red-500 font-semibold">
+          ❌ Failed to load watchlist data.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">My Watchlist</h1>
-            <p className="text-slate-600">Track your favorite cryptocurrencies in one place.</p>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              My Watchlist
+            </h1>
+            <p className="text-slate-600">
+              Track your favorite cryptocurrencies in one place.
+            </p>
           </div>
           <div className="text-sm text-slate-600">
-            <span className="font-medium">{watchlist.length}</span> coins in watchlist
+            <span className="font-medium">{watchlist.length}</span> coins in
+            watchlist
           </div>
         </div>
 
@@ -86,16 +121,7 @@ export default function Watchlist() {
         {watchlist.length === 0 ? (
           <EmptyState />
         ) : watchlistCoins.length === 0 && debouncedSearchQuery ? (
-          <Card className="p-12">
-            <CardContent className="p-0 text-center">
-              <h3 className="text-lg font-medium text-slate-900 mb-2">
-                No results found
-              </h3>
-              <p className="text-slate-600">
-                No cryptocurrencies in your watchlist match "{debouncedSearchQuery}".
-              </p>
-            </CardContent>
-          </Card>
+          <SearchEmptyState />
         ) : (
           <CryptocurrencyTable
             coins={watchlistCoins}
